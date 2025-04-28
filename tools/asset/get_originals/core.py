@@ -12,12 +12,11 @@ import os
 
 #==== DATA ====#
 
-originals_relpath = os.path.join(
+_originals_relpath = os.path.join(
 	"assets",
 	"originals",
 )
-
-originals_path = from_root(originals_relpath)
+originals_path = from_root(_originals_relpath)
 
 
 
@@ -42,7 +41,7 @@ def get_all() -> None:
 	path = os.path.join(originals_path, filename)
 	with open(path, "w") as f:
 		f.write(svg_str)
-	repr_path = os.path.join("", originals_relpath, filename)
+	repr_path = os.path.join("", _originals_relpath, filename)
 	print(f"\t\tSaved to '{repr_path}'")
 
 	print("\nDone")
