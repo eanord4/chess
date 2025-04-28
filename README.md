@@ -16,5 +16,6 @@ The folder hierarchy and packages are explained as follow. "Packaged scripts" ca
 		* **get_originals**: a packaged script for obtaining raw unmodified assets
 		* svg/: scripts for processing SVG assets
 			* **extract**: a packaged script for extracting SVG elements of interest
-* assets/: files that have been gathered in preparation for creating the app
-	* originals/: unmodified files obtained from somewhere external to this repo. The scripts used to obtain these are included in `/tools/asset`.
+* assets/: files that have been gathered in preparation for creating the app. The scripts used to obtain these are included in `/tools/asset`.
+	* originals/: unmodified files obtained from somewhere external to this repo
+	* extracted/: elements extracted from originals
