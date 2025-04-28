@@ -32,6 +32,7 @@ def std_board_svg(size: int) -> str:
 def get_all() -> None:
 	"""Obtain all original assets"""
 
+	# announce start
 	print("Getting original assets...")
 
 	# standard board SVG
@@ -44,6 +45,7 @@ def get_all() -> None:
 	repr_path = os.path.join("", _originals_relpath, filename)
 	print(f"\t\tSaved to '{repr_path}'")
 
+	# announce end
 	print("\nDone")
 
 
