@@ -94,6 +94,31 @@ def extract_definitions(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 
 	# don't announce end
 
+def extract_2_squares(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
+	"""Extract just one light square and one dark square from a chessboard SVG soup as individual SVGs"""
+
+	# announce start
+	repr_extracted_path = os.path.join("", _extracted_relpath)
+	iprint(indent, f"Extracting one light and one dark square to '{repr_extracted_path}'...")
+
+	# extract a8 and b8 squares
+	for e in (
+		soup.find('rect', class_="square light a8"),
+		soup.find('rect', class_="square dark b8"),
+	):
+
+		# announce start
+		to_save = str(wrap_as_svg_per(e, soup))
+		filename = f"{e.name}_{'-'.join(e['class'])}.svg"
+		path = os.path.join(extracted_path, filename)
+		with open(path, 'w') as f:
+			f.write(to_save)
+
+		# announce end
+		iprint(indent + 1, f"Saved '{filename}'.")
+
+	# don't announce end
+
 
 def extract_all(indent: int = 0) -> None:
 	"""Perform all extractions of SVG elements of interest"""
@@ -107,6 +132,7 @@ def extract_all(indent: int = 0) -> None:
 	# extract
 	extract_description(std_board_soup, "std_board_desc.txt", indent=indent + 1)
 	extract_definitions(std_board_soup, indent=indent + 1)
+	extract_2_squares(std_board_soup, indent=indent + 1)
 
 	# announce end
 	iprint(indent, "Done.")
@@ -121,5 +147,6 @@ __all__ = [
 	"wrap_as_svg_per",
 	"extract_description",
 	"extract_definitions",
+	"extract_2_squares",
 	"extract_all",
 ]
