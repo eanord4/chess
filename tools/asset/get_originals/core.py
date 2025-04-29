@@ -24,7 +24,7 @@ originals_path = from_root(_originals_relpath)
 #==== FUNCTIONS ====#
 
 def std_board_svg(size: int) -> str:
-	"""Make a standard starting chess board SVG from chess.com's `chess` package"""
+	"""Make a standard starting chess board SVG from the `chess` package"""
 
 	return svg.board(Board(), size=size)
 
