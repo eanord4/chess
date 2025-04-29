@@ -42,7 +42,7 @@ def load_original(filename="std_board.svg", indent: int = 0) -> bs4.BeautifulSou
 
 
 def extract_description(soup: bs4.BeautifulSoup, filename: str, indent: int = 0) -> None:
-	"""Extract the SVG"s description element"""
+	"""Extract the SVG's description element"""
 
 	# announce start
 	iprint(indent, "Extracting SVG description...")
