@@ -44,9 +44,8 @@ def update_label(filename: str, indent: int = 0, i: Optional[int] = None, out_of
 
 	# update
 	mapping[filename] = label
-	updated_content = json.dumps(mapping)
 	with open(path, 'w') as f:
-		f.write(updated_content)
+		json.dump(mapping, f, indent=4)
 
 	# announce end
 	iprint(indent + 1, f"Update mapping '{filename}' => '{label}'.")
