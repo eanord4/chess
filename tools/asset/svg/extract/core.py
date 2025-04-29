@@ -20,7 +20,11 @@ _extracted_relpath = os.path.join(
 	"extracted",
 	"svg",
 )
-extracted_path = from_root(_extracted_relpath)
+_labeled_relpath = os.path.join(_extracted_relpath, "labeled")
+_unlabeled_relpath = os.path.join(_extracted_relpath, "unlabeled")
+labeled_path = from_root(_labeled_relpath)
+unlabeled_path = from_root(_unlabeled_relpath)
+
 parser = "lxml-xml"
 
 
@@ -60,12 +64,12 @@ def extract_description(soup: bs4.BeautifulSoup, filename: str, indent: int = 0)
 
 	# extract
 	e = soup.find("desc")
-	path = os.path.join(extracted_path, filename)
+	path = os.path.join(labeled_path, filename)
 	with open(path, "w") as f:
 		f.write(e.text)
 
 	# announce end
-	repr_path = os.path.join("", _extracted_relpath, filename)
+	repr_path = os.path.join("", _labeled_relpath, filename)
 	iprint(indent + 1, f"Saved to '{repr_path}'.")
 
 
@@ -73,8 +77,8 @@ def extract_definitions(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 	"""Extract each of the definitions from a chessboard SVG soup as its own SVG"""
 
 	# announce start
-	repr_extracted_path = os.path.join("", _extracted_relpath)
-	iprint(indent, f"Extracting definitions to '{repr_extracted_path}'...")
+	repr_labeled_path = os.path.join("", _labeled_relpath)
+	iprint(indent, f"Extracting definitions to '{repr_labeled_path}'...")
 
 	# extract
 	elements = list(soup.find("defs").children)
@@ -86,7 +90,7 @@ def extract_definitions(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 		# save
 		to_save = str(wrap_as_svg_per(e, soup))
 		filename = f"{e.name}_{e['id']}.svg"
-		path = os.path.join(extracted_path, filename)
+		path = os.path.join(labeled_path, filename)
 		with open(path, 'w') as f:
 			f.write(to_save)
 
@@ -97,8 +101,8 @@ def extract_2_squares(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 	"""Extract just one light square and one dark square from a chessboard SVG soup as individual SVGs"""
 
 	# announce start
-	repr_extracted_path = os.path.join("", _extracted_relpath)
-	iprint(indent, f"Extracting one light and one dark square to '{repr_extracted_path}'...")
+	repr_labeled_path = os.path.join("", _labeled_relpath)
+	iprint(indent, f"Extracting one light and one dark square to '{repr_labeled_path}'...")
 
 	# extract a8 and b8 squares
 	for e in (
@@ -109,7 +113,7 @@ def extract_2_squares(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 		# announce start
 		to_save = str(wrap_as_svg_per(e, soup))
 		filename = f"{e.name}_{e['class'].replace(' ', '-')}.svg"
-		path = os.path.join(extracted_path, filename)
+		path = os.path.join(labeled_path, filename)
 		with open(path, 'w') as f:
 			f.write(to_save)
 
@@ -121,8 +125,8 @@ def extract_unlabeled(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 	"""Extract as-yet-unidentified top-level SVG elements as individual SVGs"""
 
 	# announce start
-	repr_extracted_path = os.path.join("", _extracted_relpath)
-	iprint(indent, f"Extracting as-yet-unlabeled SVG elements to '{repr_extracted_path}'...")
+	repr_unlabeled_path = os.path.join("", _unlabeled_relpath)
+	iprint(indent, f"Extracting as-yet-unlabeled SVG elements to '{repr_unlabeled_path}'...")
 
 	# extract
 	elements = [
@@ -148,7 +152,7 @@ def extract_unlabeled(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 		# save
 		to_save = str(wrap_as_svg_per(e, soup))
 		filename = f"{e.name}_unlabeled_{counts[e.name]}.svg"
-		path = os.path.join(extracted_path, filename)
+		path = os.path.join(unlabeled_path, filename)
 		with open(path, 'w') as f:
 			f.write(to_save)
 
