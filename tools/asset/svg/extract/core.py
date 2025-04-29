@@ -70,6 +70,9 @@ def extract_all(indent: int = 0) -> None:
 	# extract
 	extract_desc(std_board_soup, "std_board_desc.txt", indent=indent + 1)
 
+	# announce end
+	iprint(indent, "Done.")
+
 
 
 
