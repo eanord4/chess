@@ -41,6 +41,16 @@ def load_original(filename="std_board.svg", indent: int = 0) -> bs4.BeautifulSou
 	return bs4.BeautifulSoup(contents, "lxml")
 
 
+def wrap_as_svg_per(e: bs4.element.Tag, ref: bs4.BeautifulSoup) -> bs4.element.Tag:
+	"""Wrap an individual SVG element with an 'svg' tag given by a reference SVG soup"""
+
+	ref_svg_attrs = ref.find("svg").attrs
+	new_soup = bs4.BeautifulSoup("", "lxml")
+	new_svg = new_soup.new_tag("svg", **ref_svg_attrs)
+	new_svg.append(e)
+	return new_svg
+
+
 def extract_description(soup: bs4.BeautifulSoup, filename: str, indent: int = 0) -> None:
 	"""Extract the SVG's description element"""
 
@@ -58,6 +68,33 @@ def extract_description(soup: bs4.BeautifulSoup, filename: str, indent: int = 0)
 	iprint(indent + 1, f"Saved to '{repr_path}'.")
 
 
+def extract_definitions(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
+	"""Extract each of the definitions from a chessboard SVG soup as its own SVG"""
+
+	# announce start
+	repr_extracted_path = os.path.join("", _extracted_relpath)
+	iprint(indent, f"Extracting definitions to '{repr_extracted_path}'...")
+
+	# extract
+	elements = list(soup.find("defs").children)
+	for i, e in enumerate(elements):
+
+		# announce start
+		iprint(indent + 1, f"{i + 1}/{len(elements)} {e['id']}...")
+
+		# save
+		to_save = str(wrap_as_svg_per(e, soup))
+		filename = f"{e.name}_{e['id']}.svg"
+		path = os.path.join(extracted_path, filename)
+		with open(path, 'w') as f:
+			f.write(to_save)
+
+		# announce end
+		iprint(indent + 2, f"Saved as '{filename}'.")
+
+	# don't announce end
+
+
 def extract_all(indent: int = 0) -> None:
 	"""Perform all extractions of SVG elements of interest"""
 
@@ -69,6 +106,7 @@ def extract_all(indent: int = 0) -> None:
 
 	# extract
 	extract_description(std_board_soup, "std_board_desc.txt", indent=indent + 1)
+	extract_definitions(std_board_soup, indent=indent + 1)
 
 	# announce end
 	iprint(indent, "Done.")
@@ -80,6 +118,8 @@ def extract_all(indent: int = 0) -> None:
 
 __all__ = [
 	"load_original",
+	"wrap_as_svg_per",
 	"extract_description",
+	"extract_definitions",
 	"extract_all",
 ]
