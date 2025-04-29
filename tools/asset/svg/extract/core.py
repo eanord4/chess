@@ -21,6 +21,7 @@ _extracted_relpath = os.path.join(
 	"svg",
 )
 extracted_path = from_root(_extracted_relpath)
+parser = "lxml-xml"
 
 
 
@@ -38,14 +39,14 @@ def load_original(filename="std_board.svg", indent: int = 0) -> bs4.BeautifulSou
 	path = os.path.join(originals_path, filename)
 	with open(path, "r") as f:
 		contents = f.read()
-	return bs4.BeautifulSoup(contents, "lxml")
+	return bs4.BeautifulSoup(contents, parser)
 
 
 def wrap_as_svg_per(e: bs4.element.Tag, ref: bs4.BeautifulSoup) -> bs4.element.Tag:
 	"""Wrap an individual SVG element with an 'svg' tag given by a reference SVG soup"""
 
 	ref_svg_attrs = ref.find("svg").attrs
-	new_soup = bs4.BeautifulSoup("", "lxml")
+	new_soup = bs4.BeautifulSoup("", parser)
 	new_svg = new_soup.new_tag("svg", **ref_svg_attrs)
 	new_svg.append(e)
 	return new_svg
@@ -107,7 +108,7 @@ def extract_2_squares(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 
 		# announce start
 		to_save = str(wrap_as_svg_per(e, soup))
-		filename = f"{e.name}_{'-'.join(e['class'])}.svg"
+		filename = f"{e.name}_{e['class'].replace(' ', '-')}.svg"
 		path = os.path.join(extracted_path, filename)
 		with open(path, 'w') as f:
 			f.write(to_save)
