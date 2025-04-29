@@ -92,8 +92,6 @@ def extract_definitions(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 		# announce end
 		iprint(indent + 2, f"Saved as '{filename}'.")
 
-	# don't announce end
-
 def extract_2_squares(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 	"""Extract just one light square and one dark square from a chessboard SVG soup as individual SVGs"""
 
@@ -117,7 +115,44 @@ def extract_2_squares(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
 		# announce end
 		iprint(indent + 1, f"Saved '{filename}'.")
 
-	# don't announce end
+
+def extract_unlabeled(soup: bs4.BeautifulSoup, indent: int = 0) -> None:
+	"""Extract as-yet-unidentified top-level SVG elements as individual SVGs"""
+
+	# announce start
+	repr_extracted_path = os.path.join("", _extracted_relpath)
+	iprint(indent, f"Extracting as-yet-unlabeled SVG elements to '{repr_extracted_path}'...")
+
+	# extract
+	elements = [
+		e
+		for e in soup.find('svg').children
+		if
+			e.name not in {'defs', 'desc', 'use'}
+			and "class" not in e.attrs
+			and "id" not in e.attrs
+	]
+	counts = dict()
+	for i, e in enumerate(elements):
+
+		# update counts
+		if e.name in counts:
+			counts[e.name] += 1
+		else:
+			counts[e.name] = 1
+
+		# announce start
+		iprint(indent + 1, f"{i + 1}/{len(elements)} {e.name} #{counts[e.name]}...")
+
+		# save
+		to_save = str(wrap_as_svg_per(e, soup))
+		filename = f"{e.name}_unlabeled_{counts[e.name]}.svg"
+		path = os.path.join(extracted_path, filename)
+		with open(path, 'w') as f:
+			f.write(to_save)
+
+		# announce end
+		iprint(indent + 2, f"Saved as '{filename}'.")
 
 
 def extract_all(indent: int = 0) -> None:
@@ -133,6 +168,7 @@ def extract_all(indent: int = 0) -> None:
 	extract_description(std_board_soup, "std_board_desc.txt", indent=indent + 1)
 	extract_definitions(std_board_soup, indent=indent + 1)
 	extract_2_squares(std_board_soup, indent=indent + 1)
+	extract_unlabeled(std_board_soup, indent=indent + 1)
 
 	# announce end
 	iprint(indent, "Done.")
@@ -148,5 +184,6 @@ __all__ = [
 	"extract_description",
 	"extract_definitions",
 	"extract_2_squares",
+	"extract_unlabeled",
 	"extract_all",
 ]
