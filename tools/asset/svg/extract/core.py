@@ -41,7 +41,7 @@ def load_original(filename="std_board.svg", indent: int = 0) -> bs4.BeautifulSou
 	return bs4.BeautifulSoup(contents, "lxml")
 
 
-def extract_desc(soup: bs4.BeautifulSoup, filename: str, indent: int = 0) -> None:
+def extract_description(soup: bs4.BeautifulSoup, filename: str, indent: int = 0) -> None:
 	"""Extract the SVG"s description element"""
 
 	# announce start
@@ -68,7 +68,7 @@ def extract_all(indent: int = 0) -> None:
 	std_board_soup = load_original(indent=indent + 1)
 
 	# extract
-	extract_desc(std_board_soup, "std_board_desc.txt", indent=indent + 1)
+	extract_description(std_board_soup, "std_board_desc.txt", indent=indent + 1)
 
 	# announce end
 	iprint(indent, "Done.")
@@ -80,6 +80,6 @@ def extract_all(indent: int = 0) -> None:
 
 __all__ = [
 	"load_original",
-	"extract_desc",
+	"extract_description",
 	"extract_all",
 ]
